@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "752020208069",
+    "firebase_url": "https://resume-73edb.firebaseio.com",
+    "project_id": "resume-73edb",
+    "storage_bucket": "resume-73edb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752020208069:android:4add82a122dfc1775973ac",
+        "android_client_info": {
+          "package_name": "com.example.heekyungyeom_resume"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752020208069-6926q9fc6gs1gdro9cfncvei4b0q6q6k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.heekyungyeom_resume",
+            "certificate_hash": "cb54654d811e48beb7230454b5920b51919069b9"
+          }
+        },
+        {
+          "client_id": "752020208069-t5rfiagdhfp6147708p9err3lh1riumh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXhihvqmfQncXVFvSd-8JIcHzBGeJS16k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752020208069-t5rfiagdhfp6147708p9err3lh1riumh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
