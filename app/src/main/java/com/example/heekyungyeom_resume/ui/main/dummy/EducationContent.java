@@ -23,39 +23,33 @@ public class EducationContent {
      */
     public static final Map<String, EducationItem> ITEM_MAP = new HashMap<String, EducationItem>();
 
-    private static final int COUNT = 3;
-
-    static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
-        }
-    }
-
-    private static void addItem(EducationItem item) {
+    public static void addItem(EducationItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
-    private static EducationItem createDummyItem(int position) {
-        return new EducationItem(String.valueOf(position), "2005/03-2006/08", "동국대학교 전산원",  "멀티미디어과", "4.3/4.5", "조기졸업");
+    public static EducationItem createDummyItem(String id, String period, String schoolname, String major, String gpa, String remark ) {
+        return new EducationItem(id, period, schoolname,  major, gpa, remark);
     }
 
-
-    /**
-     * A dummy item representing a piece of content.
-     */
     public static class EducationItem {
+
         public final String id;
-        public final String yearmonth;
+
+        public final String period;
+
         public final String schoolname;
+
         public final String major;
+
         public final String gpa;
+
         public final String remark;
 
-        public EducationItem(String id, String yearmonth, String schoolname, String major, String gpa, String remark) {
+
+        public EducationItem(String id, String period, String schoolname, String major, String gpa, String remark) {
             this.id = id;
-            this.yearmonth = yearmonth;
+            this.period = period;
             this.schoolname = schoolname;
             this.major = major;
             this.gpa = gpa;
@@ -64,7 +58,8 @@ public class EducationContent {
 
         @Override
         public String toString() {
-            return " year/month:" +  yearmonth + " school_name:" + schoolname + " major:" +  major + " GPA:" +  gpa + " Remark:" + remark;
+            return this.period + " " + this.schoolname + " " + this.major + " " + this.gpa+ " " + this.remark ;
         }
     }
+
 }

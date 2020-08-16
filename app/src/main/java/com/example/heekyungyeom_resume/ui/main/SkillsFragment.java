@@ -2,6 +2,7 @@ package com.example.heekyungyeom_resume.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,28 @@ import android.view.ViewGroup;
 import com.example.heekyungyeom_resume.R;
 import com.example.heekyungyeom_resume.ui.main.dummy.EducationContent;
 import com.example.heekyungyeom_resume.ui.main.dummy.EducationContent.EducationItem;
+import com.example.heekyungyeom_resume.ui.main.dummy.ExperienceContent;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,8 +46,10 @@ public class SkillsFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -50,30 +72,108 @@ public class SkillsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_skills_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_skills, container, false);
 
+        load_database();
+        load_storage();
+
+        return view;
+    }
+
+    private void load_database() {
+        db.collection("education")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                EducationContent.addItem(EducationContent.createDummyItem(document.getId(),
+                                        document.getString("period"),
+                                        document.getString("school_name"),
+                                        document.getString("major"),
+                                        document.getString("gpa"),
+                                        document.getString("remark")));
+                            }
+
+                            setEduAdapter(getView().findViewById(R.id.education_list));
+
+                        } else {
+                            Log.w("hkyeom", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void load_storage() {
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference csvRef = storageRef.child("resueme_experience.csv");
+
+        try {
+            File localFile = File.createTempFile("resume_experience", ".csv");
+            final String filePath = localFile.getAbsolutePath();
+            csvRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    try {
+                        InputStream inStream = new FileInputStream(filePath);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "MS949"));
+                        String csvLine;
+                        int i=0;
+                        while((csvLine = reader.readLine()) != null) {
+                            String[] row = csvLine.split(",");
+                            ExperienceContent.addItem(ExperienceContent.createDummyItem(String.valueOf(i++), row[0], row[1], row[2], (row.length > 3? row[3] : "")));
+                        }
+
+                        setExpAdapter(getView().findViewById(R.id.expereance_list));
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    private void setEduAdapter(View view) {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MySkillRecyclerViewAdapter(EducationContent.ITEMS, mListener));
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(new EduRecyclerViewAdapter(EducationContent.ITEMS, mListener));
         }
-        return view;
     }
 
+    private void setExpAdapter(View view) {
+        // Set the adapter
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(new ExpRecyclerViewAdapter(ExperienceContent.ITEMS, mListener));
+        }
+    }
 
     @Override
     public void onAttach(Context context) {

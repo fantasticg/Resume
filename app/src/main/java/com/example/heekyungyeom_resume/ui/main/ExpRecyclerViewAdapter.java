@@ -1,7 +1,5 @@
 package com.example.heekyungyeom_resume.ui.main;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,20 +8,24 @@ import android.widget.TextView;
 import com.example.heekyungyeom_resume.R;
 import com.example.heekyungyeom_resume.ui.main.SkillsFragment.OnListFragmentInteractionListener;
 import com.example.heekyungyeom_resume.ui.main.dummy.EducationContent.EducationItem;
+import com.example.heekyungyeom_resume.ui.main.dummy.ExperienceContent;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link EducationItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MySkillRecyclerViewAdapter extends RecyclerView.Adapter<MySkillRecyclerViewAdapter.ViewHolder> {
+public class ExpRecyclerViewAdapter extends RecyclerView.Adapter<ExpRecyclerViewAdapter.ViewHolder> {
 
-    private final List<EducationItem> mValues;
+    private final List<ExperienceContent.ExperienceItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MySkillRecyclerViewAdapter(List<EducationItem> items, OnListFragmentInteractionListener listener) {
+    public ExpRecyclerViewAdapter(List<ExperienceContent.ExperienceItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -31,15 +33,18 @@ public class MySkillRecyclerViewAdapter extends RecyclerView.Adapter<MySkillRecy
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_skills, parent, false);
+                .inflate(R.layout.experience_listitem, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).toString());
+
+        holder.mPeriodView.setText(mValues.get(position).period);
+        holder.mCompany.setText(mValues.get(position).company);
+        holder.mProject.setText(mValues.get(position).project);
+        //holder.mRemarkView.setText(mValues.get(position).remark);
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,20 +65,20 @@ public class MySkillRecyclerViewAdapter extends RecyclerView.Adapter<MySkillRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mPeriodView;
+        public final TextView mCompany;
+        public final TextView mProject;
+        //public final TextView mRemarkView;
         public EducationItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mPeriodView = view.findViewById(R.id.exp_period);
+            mCompany = view.findViewById(R.id.exp_company);
+            mProject = view.findViewById(R.id.exp_project);
+            //mRemarkView = (TextView) view.findViewById(R.id.exp_remark);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
     }
 }

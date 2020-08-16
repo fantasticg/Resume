@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="*"
+    android:background="#000000">
+    <TableRow>
+        <TextView
+            android:id="@+id/edu_period"
+            android:textSize="15dp"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="#FFFFFF"
+            android:layout_margin="0.5dp"/>
+        <TextView
+            android:id="@+id/edu_school_name"
+            android:textSize="15dp"
+            android:layout_width="120dp"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:layout_margin="0.5dp"/>
+        <TextView
+            android:id="@+id/edu_major"
+            android:textSize="15dp"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="#FFFFFF"
+            android:layout_margin="0.5dp"/>
+
+        <TextView
+            android:id="@+id/edu_gpa"
+            android:textSize="15dp"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="#FFFFFF"
+            android:layout_margin="0.5dp"/>
+    </TableRow>
+
+</TableLayout>
+
